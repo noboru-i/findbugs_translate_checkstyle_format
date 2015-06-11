@@ -9,6 +9,7 @@ module FindbugsTranslateCheckstyleFormat
     end
 
     def trans(xml)
+      return nil unless xml['BugCollection']['BugInstance']
       require 'rexml/document'
       doc = REXML::Document.new
       doc << REXML::XMLDecl.new('1.0', 'UTF-8')

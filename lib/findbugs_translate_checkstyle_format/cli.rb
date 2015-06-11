@@ -10,6 +10,7 @@ module FindbugsTranslateCheckstyleFormat
       data = fetch_data(options)
       xml = parse(data)
       checkstyle = trans(xml)
+      return unless checkstyle
       checkstyle.write(STDOUT, 2)
     end
 
