@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'findbugs_translate_checkstyle_format'
+require 'findbugs_translate_checkstyle_format/cli'
+
+FindbugsTranslateCheckstyleFormat::CLI.start
