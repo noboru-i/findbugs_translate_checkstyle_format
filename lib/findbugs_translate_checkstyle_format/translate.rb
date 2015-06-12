@@ -9,21 +9,22 @@ module FindbugsTranslateCheckstyleFormat
     end
 
     def trans(xml)
-      return nil unless xml['BugCollection']['BugInstance']
       require 'rexml/document'
       doc = REXML::Document.new
       doc << REXML::XMLDecl.new('1.0', 'UTF-8')
 
       checkstyle = doc.add_element("checkstyle")
-      xml['BugCollection']['BugInstance'].each do |bugInstance|
-        file = checkstyle.add_element("file", {
-          'name' => fqcn_to_path(bugInstance['SourceLine']['@classname'], xml)
-          })
-        file.add_element("error", {
-          'line' => bugInstance['SourceLine']['@start'],
-          'severity' => '',
-          'message' => "[#{bugInstance['@category']}] #{bugInstance['LongMessage']}"
-          })
+      if xml['BugCollection']['BugInstance']
+        xml['BugCollection']['BugInstance'].each do |bugInstance|
+          file = checkstyle.add_element("file", {
+            'name' => fqcn_to_path(bugInstance['SourceLine']['@classname'], xml)
+            })
+          file.add_element("error", {
+            'line' => bugInstance['SourceLine']['@start'],
+            'severity' => '',
+            'message' => "[#{bugInstance['@category']}] #{bugInstance['LongMessage']}"
+            })
+        end
       end
 
       doc
