@@ -25,6 +25,12 @@ module FindbugsTranslateCheckstyleFormat
             'message' => "[#{bugInstance['@category']}] #{bugInstance['LongMessage']}"
             })
         end
+      else
+        # create dummy
+        dummy_src_dir = xml['BugCollection']['Project']['SrcDir'].first
+        file = checkstyle.add_element("file", {
+          'name' => dummy_src_dir
+          })
       end
 
       doc
