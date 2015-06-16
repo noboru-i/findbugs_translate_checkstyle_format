@@ -28,7 +28,10 @@ module FindbugsTranslateCheckstyleFormat
         end
       else
         # create dummy
-        dummy_src_dir = xml['BugCollection']['Project']['SrcDir'].first
+        dummy_src_dir = xml['BugCollection']['Project']['SrcDir']
+        if dummy_src_dir.is_a?(Array)
+          dummy_src_dir = dummy_src_dir.first
+        end
         file = checkstyle.add_element("file", {
           'name' => dummy_src_dir
           })
@@ -39,7 +42,11 @@ module FindbugsTranslateCheckstyleFormat
 
     def fqcn_to_path(fqcn, xml)
       path = fqcn.gsub('.', '/') + '.java'
-      xml['BugCollection']['Project']['SrcDir'].find do |src|
+      src_dirs = xml['BugCollection']['Project']['SrcDir']
+      unless src_dirs.is_a?(Array)
+        src_dirs = [src_dirs]
+      end
+      src_dirs.find do |src|
         src.index(path) != nil
       end
     end

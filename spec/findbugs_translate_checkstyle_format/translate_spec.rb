@@ -1,6 +1,8 @@
 require 'spec_helper'
 
-describe FindbugsTranslateCheckstyleFormat do
+describe FindbugsTranslateCheckstyleFormat::Translate do
+  include FindbugsTranslateCheckstyleFormat::Translate
+
   describe 'fqcn_to_path' do
     fqcn = 'com.example.Test'
     context 'one SrdCir' do
@@ -8,13 +10,11 @@ describe FindbugsTranslateCheckstyleFormat do
         xml = {
           'BugCollection' => {
             'Project' => {
-              'SrcDir' => {
-                '/test/com/exapmle/Test'
-              }
+              'SrcDir' => '/test/com/example/Test.java'
             }
           }
         }
-        expect(fqcn_to_path(fqcn, xml)).to eq '/test/com/exapmle/Test'
+        expect(fqcn_to_path(fqcn, xml)).to eq '/test/com/example/Test.java'
       end
     end
 
@@ -24,13 +24,13 @@ describe FindbugsTranslateCheckstyleFormat do
           'BugCollection' => {
             'Project' => {
               'SrcDir' => [
-                '/test/com/exapmle/Hoge'
-                '/test/com/exapmle/Test'
+                '/test/com/example/Hoge.java',
+                '/test/com/example/Test.java'
               ]
             }
           }
         }
-        expect(fqcn_to_path(fqcn, xml)).to eq '/test/com/exapmle/Test'
+        expect(fqcn_to_path(fqcn, xml)).to eq '/test/com/example/Test.java'
       end
     end
   end
