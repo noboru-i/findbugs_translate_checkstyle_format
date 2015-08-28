@@ -27,14 +27,7 @@ module FindbugsTranslateCheckstyleFormat
             })
         end
       else
-        # create dummy
-        dummy_src_dir = xml['BugCollection']['Project']['SrcDir']
-        if dummy_src_dir.is_a?(Array)
-          dummy_src_dir = dummy_src_dir.first
-        end
-        file = checkstyle.add_element("file", {
-          'name' => dummy_src_dir
-          })
+        set_dummy(xml, checkstyle)
       end
 
       doc
@@ -49,6 +42,18 @@ module FindbugsTranslateCheckstyleFormat
       src_dirs.find do |src|
         src.index(path) != nil
       end
+    end
+
+    def set_dummy(xml, checkstyle)
+      # create dummy
+      dummy_src_dir = xml['BugCollection']['Project']['SrcDir']
+      if dummy_src_dir.is_a?(Array)
+        dummy_src_dir = dummy_src_dir.first
+      end
+      file = checkstyle.add_element("file", {
+        'name' => dummy_src_dir
+        })
+      checkstyle
     end
   end
 end
