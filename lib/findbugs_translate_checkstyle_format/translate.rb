@@ -19,7 +19,8 @@ module FindbugsTranslateCheckstyleFormat
         return doc
       end
 
-      bugInstances = xml['BugCollection']['BugInstance'].is_a?(Array) ? xml['BugCollection']['BugInstance'] : [xml['BugCollection']['BugInstance']]
+      bugInstances = xml['BugCollection']['BugInstance']
+      bugInstances = [bugInstances] if xml['BugCollection']['BugInstance'].is_a?(Hash)
       bugInstances.each do |bugInstance|
         file = checkstyle.add_element("file", {
           'name' => fqcn_to_path(bugInstance['SourceLine']['@classname'], xml)
