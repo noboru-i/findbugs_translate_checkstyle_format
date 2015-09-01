@@ -55,7 +55,8 @@ module FindbugsTranslateCheckstyleFormat
     end
 
     def self.create_message(bug_instance)
-      "[#{bug_instance['@category']}][#{bug_instance['@type']}] #{bug_instance['LongMessage']}"
+      link = "http://findbugs.sourceforge.net/bugDescriptions.html##{bug_instance['@type']}"
+      "[#{bug_instance['@category']}][#{bug_instance['@type']}] #{bug_instance['LongMessage']}\n#{link}"
     end
   end
 end
