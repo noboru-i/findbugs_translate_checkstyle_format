@@ -5,7 +5,7 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
 
   describe 'trans' do
     before do
-      allow(self).to receive(:fqcn_to_path).and_return('test.java')
+      allow(FindbugsTranslateCheckstyleFormat::Translate).to receive(:fqcn_to_path).and_return('test.java')
     end
     context 'no BugInstance' do
       xml = {
@@ -137,6 +137,16 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
         expect(doc.get_elements('/checkstyle/file/error')).to be_empty
         expect(doc.get_elements('/checkstyle/file').first.attribute('name').value).to eq('test_dir1')
       end
+    end
+  end
+
+  describe 'create_message' do
+    bug_instance = {
+      '@type' => 'RV_EXCEPTION_NOT_THROWN'
+    }
+    subject(:message) { FindbugsTranslateCheckstyleFormat::Translate.create_message(bug_instance) }
+    it 'include link' do
+      expect(message).to include('http://findbugs.sourceforge.net/bugDescriptions.html#RV_EXCEPTION_NOT_THROWN')
     end
   end
 end
