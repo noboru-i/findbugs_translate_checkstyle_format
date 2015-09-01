@@ -1,4 +1,5 @@
 require 'nori'
+require 'rexml/document'
 
 module FindbugsTranslateCheckstyleFormat
   module Translate
@@ -9,50 +10,46 @@ module FindbugsTranslateCheckstyleFormat
     end
 
     def trans(xml)
-      require 'rexml/document'
       doc = REXML::Document.new
       doc << REXML::XMLDecl.new('1.0', 'UTF-8')
 
-      checkstyle = doc.add_element("checkstyle")
-      if xml['BugCollection']['BugInstance'].blank?
-        set_dummy(xml, checkstyle)
+      checkstyle = doc.add_element('checkstyle')
+      bug_instances = xml['BugCollection']['BugInstance']
+      if bug_instances.blank?
+        FindbugsTranslateCheckstyleFormat::Translate.set_dummy(xml, checkstyle)
         return doc
       end
 
-      bugInstances = xml['BugCollection']['BugInstance']
-      bugInstances = [bugInstances] if xml['BugCollection']['BugInstance'].is_a?(Hash)
-      bugInstances.each do |bugInstance|
-        file = checkstyle.add_element("file", {
-          'name' => fqcn_to_path(bugInstance['SourceLine']['@classname'], xml)
-          })
-        file.add_element("error", {
-          'line' => bugInstance['SourceLine']['@start'],
-          'severity' => '',
-          'message' => "[#{bugInstance['@category']}] #{bugInstance['LongMessage']}"
-          })
+      bug_instances = [bug_instances] if bug_instances.is_a?(Hash)
+      bug_instances.each do |bug_instance|
+        source_line = bug_instance['SourceLine']
+        file = checkstyle.add_element('file',
+                                      'name' => fqcn_to_path(source_line['@classname'], xml)
+                                     )
+        file.add_element('error',
+                         'line' => source_line['@start'],
+                         'severity' => '',
+                         'message' => "[#{bug_instance['@category']}] #{bug_instance['LongMessage']}"
+                        )
       end
 
       doc
     end
 
-    def fqcn_to_path(fqcn, xml)
-      path = fqcn.gsub('.', '/') + '.java'
+    def self.fqcn_to_path(fqcn, xml)
+      path = fqcn.tr('.', '/') + '.java'
       src_dirs = xml['BugCollection']['Project']['SrcDir']
-      unless src_dirs.is_a?(Array)
-        src_dirs = [src_dirs]
-      end
-      src_dirs.find do |src|
-        src.index(path) != nil
-      end
+      src_dirs = [src_dirs] unless src_dirs.is_a?(Array)
+      src_dirs.find { |src| !src.index(path).nil? }
     end
 
-    def set_dummy(xml, checkstyle)
+    def self.set_dummy(xml, checkstyle)
       dummy_src_dir = xml['BugCollection']['Project']['SrcDir']
       dummy_src_dir = dummy_src_dir.first if dummy_src_dir.is_a?(Array)
 
-      checkstyle.add_element("file", {
-        'name' => dummy_src_dir
-        })
+      checkstyle.add_element('file',
+                             'name' => dummy_src_dir
+                            )
 
       checkstyle
     end

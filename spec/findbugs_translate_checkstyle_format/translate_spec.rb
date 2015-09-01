@@ -4,9 +4,9 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
   include FindbugsTranslateCheckstyleFormat::Translate
 
   describe 'trans' do
-    before {
+    before do
       allow(self).to receive(:fqcn_to_path).and_return('test.java')
-    }
+    end
     context 'no BugInstance' do
       xml = {
         'BugCollection' => {
@@ -82,7 +82,7 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
             }
           }
         }
-        expect(fqcn_to_path(fqcn, xml)).to eq '/test/com/example/Test.java'
+        expect(FindbugsTranslateCheckstyleFormat::Translate.fqcn_to_path(fqcn, xml)).to eq '/test/com/example/Test.java'
       end
     end
 
@@ -98,7 +98,7 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
             }
           }
         }
-        expect(fqcn_to_path(fqcn, xml)).to eq '/test/com/example/Test.java'
+        expect(FindbugsTranslateCheckstyleFormat::Translate.fqcn_to_path(fqcn, xml)).to eq '/test/com/example/Test.java'
       end
     end
   end
@@ -114,8 +114,8 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
       }
       require 'rexml/document'
       doc = REXML::Document.new
-      checkstyle = doc.add_element("checkstyle")
-      before { set_dummy(xml, checkstyle) }
+      checkstyle = doc.add_element('checkstyle')
+      before { FindbugsTranslateCheckstyleFormat::Translate.set_dummy(xml, checkstyle) }
       it 'return blank dom' do
         expect(doc.get_elements('/checkstyle/file/error')).to be_empty
         expect(doc.get_elements('/checkstyle/file').first.attribute('name').value).to eq('test_dir')
@@ -125,17 +125,14 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
       xml = {
         'BugCollection' => {
           'Project' => {
-            'SrcDir' => [
-              'test_dir1',
-              'test_dir2'
-            ]
+            'SrcDir' => %w(test_dir1 test_dir2)
           }
         }
       }
       require 'rexml/document'
       doc = REXML::Document.new
-      checkstyle = doc.add_element("checkstyle")
-      before { set_dummy(xml, checkstyle) }
+      checkstyle = doc.add_element('checkstyle')
+      before { FindbugsTranslateCheckstyleFormat::Translate.set_dummy(xml, checkstyle) }
       it 'return blank dom' do
         expect(doc.get_elements('/checkstyle/file/error')).to be_empty
         expect(doc.get_elements('/checkstyle/file').first.attribute('name').value).to eq('test_dir1')
