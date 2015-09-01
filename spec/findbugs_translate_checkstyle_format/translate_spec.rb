@@ -5,7 +5,7 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
 
   describe 'trans' do
     before do
-      allow(self).to receive(:fqcn_to_path).and_return('test.java')
+      allow(FindbugsTranslateCheckstyleFormat::Translate).to receive(:fqcn_to_path).and_return('test.java')
     end
     context 'no BugInstance' do
       xml = {

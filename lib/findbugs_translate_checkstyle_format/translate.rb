@@ -24,12 +24,12 @@ module FindbugsTranslateCheckstyleFormat
       bug_instances.each do |bug_instance|
         source_line = bug_instance['SourceLine']
         file = checkstyle.add_element('file',
-                                      'name' => fqcn_to_path(source_line['@classname'], xml)
+                                      'name' => FindbugsTranslateCheckstyleFormat::Translate.fqcn_to_path(source_line['@classname'], xml)
                                      )
         file.add_element('error',
                          'line' => source_line['@start'],
-                         'severity' => '',
-                         'message' => "[#{bug_instance['@category']}] #{bug_instance['LongMessage']}"
+                         'severity' => 'error',
+                         'message' => FindbugsTranslateCheckstyleFormat::Translate.create_message(bug_instance)
                         )
       end
 
@@ -52,6 +52,10 @@ module FindbugsTranslateCheckstyleFormat
                             )
 
       checkstyle
+    end
+
+    def self.create_message(bug_instance)
+      "[#{bug_instance['@category']}][#{bug_instance['@type']}] #{bug_instance['LongMessage']}"
     end
   end
 end
