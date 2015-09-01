@@ -139,4 +139,14 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
       end
     end
   end
+
+  describe 'create_message' do
+    bug_instance = {
+      '@type' => 'RV_EXCEPTION_NOT_THROWN'
+    }
+    subject(:message) { FindbugsTranslateCheckstyleFormat::Translate.create_message(bug_instance) }
+    it 'include link' do
+      expect(message).to include('http://findbugs.sourceforge.net/bugDescriptions.html#RV_EXCEPTION_NOT_THROWN')
+    end
+  end
 end
