@@ -101,6 +101,19 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
         expect(FindbugsTranslateCheckstyleFormat::Translate.fqcn_to_path(fqcn, xml)).to eq '/test/com/example/Test.java'
       end
     end
+
+    context 'inner class' do
+      it 'inner class' do
+        xml = {
+          'BugCollection' => {
+            'Project' => {
+              'SrcDir' => '/test/com/example/Test.java'
+            }
+          }
+        }
+        expect(FindbugsTranslateCheckstyleFormat::Translate.fqcn_to_path('com.example.Test$1', xml)).to eq '/test/com/example/Test.java'
+      end
+    end
   end
 
   describe 'set_dummy' do
