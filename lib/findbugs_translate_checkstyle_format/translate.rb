@@ -38,7 +38,6 @@ module FindbugsTranslateCheckstyleFormat
 
     def self.fqcn_to_path(fqcn, xml)
       path = fqcn.tr('.', '/').gsub(/\$[0-9]+/, '') + '.java'
-      puts path
       src_dirs = xml['BugCollection']['Project']['SrcDir']
       src_dirs = [src_dirs] unless src_dirs.is_a?(Array)
       src_dirs.find { |src| !src.index(path).nil? }
