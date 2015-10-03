@@ -113,6 +113,20 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
         }
         expect(FindbugsTranslateCheckstyleFormat::Translate.fqcn_to_path('com.example.Test$1', xml)).to eq '/test/com/example/Test.java'
       end
+
+      it 'include number' do
+        xml = {
+          'BugCollection' => {
+            'Project' => {
+              'SrcDir' => [
+                '/test/com/example/Test.java',
+                '/test/com/example123/Test.java'
+              ]
+            }
+          }
+        }
+        expect(FindbugsTranslateCheckstyleFormat::Translate.fqcn_to_path('com.example123.Test$1', xml)).to eq '/test/com/example123/Test.java'
+      end
     end
   end
 
