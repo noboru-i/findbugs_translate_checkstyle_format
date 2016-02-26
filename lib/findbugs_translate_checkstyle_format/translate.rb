@@ -22,15 +22,18 @@ module FindbugsTranslateCheckstyleFormat
 
       bug_instances = [bug_instances] if bug_instances.is_a?(Hash)
       bug_instances.each do |bug_instance|
-        source_line = bug_instance['SourceLine']
-        file = checkstyle.add_element('file',
-                                      'name' => FindbugsTranslateCheckstyleFormat::Translate.fqcn_to_path(source_line['@classname'], xml)
-                                     )
-        file.add_element('error',
-                         'line' => source_line['@start'],
-                         'severity' => 'error',
-                         'message' => FindbugsTranslateCheckstyleFormat::Translate.create_message(bug_instance)
-                        )
+        source_lines = bug_instance['SourceLine']
+        source_lines = [source_lines] if source_lines.is_a?(Hash)
+        source_lines.each do |source_line|
+          file = checkstyle.add_element('file',
+                                        'name' => FindbugsTranslateCheckstyleFormat::Translate.fqcn_to_path(source_line['@classname'], xml)
+                                       )
+          file.add_element('error',
+                           'line' => source_line['@start'],
+                           'severity' => 'error',
+                           'message' => FindbugsTranslateCheckstyleFormat::Translate.create_message(bug_instance)
+                          )
+        end
       end
 
       doc
