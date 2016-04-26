@@ -132,7 +132,7 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
     end
 
     context 'inner class' do
-      it 'inner class' do
+      it 'anonymous inner class' do
         xml = {
           'BugCollection' => {
             'Project' => {
@@ -141,6 +141,17 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
           }
         }
         expect(FindbugsTranslateCheckstyleFormat::Translate.fqcn_to_path('com.example.Test$1', xml)).to eq '/test/com/example/Test.java'
+      end
+
+      it 'inner class' do
+        xml = {
+          'BugCollection' => {
+            'Project' => {
+              'SrcDir' => '/test/com/example/Test.java'
+            }
+          }
+        }
+        expect(FindbugsTranslateCheckstyleFormat::Translate.fqcn_to_path('com.example.Test$TestClass', xml)).to eq '/test/com/example/Test.java'
       end
 
       it 'include number' do
