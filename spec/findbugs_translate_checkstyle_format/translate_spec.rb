@@ -107,7 +107,7 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
         xml = {
           'BugCollection' => {
             'Project' => {
-              'SrcDir' => '/test/com/example/Test.java'
+              'SrcDir' => '/test'
             }
           }
         }
@@ -115,7 +115,7 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
       end
     end
 
-    context 'many SrdCir' do
+    context 'many SrcDir' do
       it 'contains xml array' do
         xml = {
           'BugCollection' => {
@@ -136,7 +136,10 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
         xml = {
           'BugCollection' => {
             'Project' => {
-              'SrcDir' => '/test/com/example/Test.java'
+              'SrcDir' => [
+                '/test/com/example/Test.java',
+                '/test/com/example/Hoge.java'
+              ]
             }
           }
         }
@@ -147,7 +150,10 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
         xml = {
           'BugCollection' => {
             'Project' => {
-              'SrcDir' => '/test/com/example/Test.java'
+              'SrcDir' => [
+                '/test/com/example/Test.java',
+                '/test/com/example/Hoge.java'
+              ]
             }
           }
         }
