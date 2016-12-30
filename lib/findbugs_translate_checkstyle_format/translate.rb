@@ -22,13 +22,14 @@ module FindbugsTranslateCheckstyleFormat
 
       bug_instances = [bug_instances] if bug_instances.is_a?(Hash)
       bug_instances.each do |bug_instance|
-        source_lines = if bug_instance.has_key?('SourceLine')
-          bug_instance['SourceLine']
-        elsif bug_instance['Class'].is_a?(Array)
-          bug_instance['Class'].map{|classes| classes['SourceLine']}
-        else
-          bug_instance['Class']['SourceLine']
-        end
+        source_lines =
+          if bug_instance.key?('SourceLine')
+            bug_instance['SourceLine']
+          elsif bug_instance['Class'].is_a?(Array)
+            bug_instance['Class'].map { |classes| classes['SourceLine'] }
+          else
+            bug_instance['Class']['SourceLine']
+          end
         source_lines = [source_lines] if source_lines.is_a?(Hash)
         source_lines.each do |source_line|
           file = checkstyle.add_element('file',
