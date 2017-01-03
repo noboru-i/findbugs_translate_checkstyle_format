@@ -98,6 +98,58 @@ describe FindbugsTranslateCheckstyleFormat::Translate do
         expect(doc.get_elements('/checkstyle/file').first.attribute('name').value).to eq('test.java')
       end
     end
+    context 'single BugInstance and SourceLine in many Class' do
+      xml = {
+        'BugCollection' => {
+          'BugInstance' => {
+            'Class' => [
+              {
+                'SourceLine' => {
+                  '@classname' => 'com.example.Test',
+                  '@start' => 12
+                }
+              },
+              {
+                'SourceLine' => {
+                  '@classname' => 'com.example.Test',
+                  '@start' => 14
+                }
+              }
+            ]
+          }
+        }
+      }
+      subject(:doc) { trans(xml) }
+      it 'return blank dom' do
+        expect(doc.get_elements('/checkstyle/file').count).to eq(2)
+        expect(doc.get_elements('/checkstyle/file[1]/error').first.attribute('line').value).to eq('12')
+        expect(doc.get_elements('/checkstyle/file[1]/error').first.attribute('message').value).not_to be_nil
+        expect(doc.get_elements('/checkstyle/file[2]/error').first.attribute('line').value).to eq('14')
+        expect(doc.get_elements('/checkstyle/file[2]/error').first.attribute('message').value).not_to be_nil
+        expect(doc.get_elements('/checkstyle/file').first.attribute('name').value).to eq('test.java')
+      end
+    end
+    context 'single BugInstance and SourceLine in single Class' do
+      xml = {
+        'BugCollection' => {
+          'BugInstance' => {
+            'Class' => {
+              'SourceLine' => {
+                '@classname' => 'com.example.Test',
+                '@start' => 12
+              }
+            }
+          }
+        }
+      }
+      subject(:doc) { trans(xml) }
+      it 'return blank dom' do
+        expect(doc.get_elements('/checkstyle/file/error')).not_to be_empty
+        expect(doc.get_elements('/checkstyle/file/error')[0].attribute('line').value).to eq('12')
+        expect(doc.get_elements('/checkstyle/file/error')[0].attribute('message').value).not_to be_nil
+        expect(doc.get_elements('/checkstyle/file').first.attribute('name').value).to eq('test.java')
+      end
+    end
   end
 
   describe 'fqcn_to_path' do
