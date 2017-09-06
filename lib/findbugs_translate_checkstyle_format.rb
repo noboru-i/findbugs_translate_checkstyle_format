@@ -1,5 +1,6 @@
 require 'findbugs_translate_checkstyle_format/version'
 require 'findbugs_translate_checkstyle_format/translate'
+require 'findbugs_translate_checkstyle_format/script'
 
 module FindbugsTranslateCheckstyleFormat
 end
